@@ -1,0 +1,24 @@
+{
+  "name": "ecomm",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000E\u0000-\u0000C\u0000o\u0000m\u0000m\u0000e\u0000r\u0000c\u0000e\u0000-\u0000A\u0000p\u0000p\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "dev":"nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neo-kjb/E-Commerce-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neo-kjb/E-Commerce-App/issues"
+  },
+  "homepage": "https://github.com/neo-kjb/E-Commerce-App#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "nodemon": "^2.0.20"
+  }
+}
