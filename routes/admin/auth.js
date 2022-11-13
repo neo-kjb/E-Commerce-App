@@ -1,62 +1,84 @@
-const express= require('express')
-const usersRepo=require('../../Repositories/users');
-const signupTemplate=require('../../views/admin/auth/signup');
-const signinTemplate= require('../../views/admin/auth/signin');
+const express = require('express')
+const { check, validationResult } = require('express-validator')
+const usersRepo = require('../../Repositories/users')
+const signupTemplate = require('../../views/admin/auth/signup')
+const signinTemplate = require('../../views/admin/auth/signin')
 
-const router = express.Router();
+const router = express.Router()
 
-router.get('/signup', (req,res)=>{
-    res.send(signupTemplate({req}));
-});
-
-router.post('/signup',async(req,res)=>{
-    const {email , password, passwordConfirmation}= req.body;
-    const existingEmail = await usersRepo.getOneBy({email});
-    if(existingEmail){
-        return res.send('Email in use');
-    }
-
-    if (password !== passwordConfirmation){
-        return res.send('passwords must match')
-    };
-
-    if(!password){
-        return res.send('please enter a password')
-    }
-    
-    const user = await usersRepo.create({email,password});
-    req.session.userId=user.id;
-
-
-    res.send('Account created');
-});
-
-router.get('/signout',(req,res)=>{
-    req.session=null;
-    res.send('Logged out');
-});
-
-router.get('/signin',(req,res)=>{
-    res.send(signinTemplate());
+router.get('/signup', (req, res) => {
+  res.send(signupTemplate({ req }))
 })
 
-router.post('/signin',async(req,res)=>{
-    const {email,password}=req.body;
-    const user=await usersRepo.getOneBy({email});
+router.post(
+  '/signup',
+  [
+    check('email')
+      .trim()
+      .normalizeEmail()
+      .isEmail()
+      .withMessage('Must be a valid Email')
+      .custom(async (email) => {
+        const existingEmail = await usersRepo.getOneBy({ email })
+        if (existingEmail) {
+          throw new Error('Email in use')
+        }
+      }),
+    check('password')
+      .trim()
+      .isLength({ min: 4, max: 20 })
+      .withMessage('Must be between 4 and 20 characters'),
+    check('passwordConfirmation')
+      .trim()
+      .isLength({ min: 4, max: 20 })
+      .withMessage('Must be between 4 and 20 characters')
+      .custom((passwordConfirmation, { req }) => {
+        if (passwordConfirmation !== req.body.password) {
+          throw new Error('passwords must match')
+        }
+      }),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req)
+    console.log(errors)
+    const { email, password, passwordConfirmation } = req.body
 
-    if(!user){
-        return res.send('Email not found')
-    };
+    const user = await usersRepo.create({ email, password })
+    req.session.userId = user.id
 
-    const validPassword = await usersRepo.comparePasswords(user.password,password)
+    res.send('Account created')
+  },
+)
 
-    if (!validPassword){
-        return res.send('Invalid Password')
-    };
+router.get('/signout', (req, res) => {
+  req.session = null
+  res.send('Logged out')
+})
 
-    req.session.userId=user.id;
+router.get('/signin', (req, res) => {
+  res.send(signinTemplate())
+})
 
-    res.send('logged in');
-});
+router.post('/signin', async (req, res) => {
+  const { email, password } = req.body
+  const user = await usersRepo.getOneBy({ email })
 
-module.exports= router;
+  if (!user) {
+    return res.send('Email not found')
+  }
+
+  const validPassword = await usersRepo.comparePasswords(
+    user.password,
+    password,
+  )
+
+  if (!validPassword) {
+    return res.send('Invalid Password')
+  }
+
+  req.session.userId = user.id
+
+  res.send('logged in')
+})
+
+module.exports = router
