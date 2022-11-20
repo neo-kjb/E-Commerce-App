@@ -1,0 +1,19 @@
+const { getErrors } = require('../../helpers')
+const layout = require('../layout')
+module.exports = ({ product, errors }) => {
+  return layout({
+    content: `
+        <form method="post">
+            <input name="title" value="${product.title}"/>
+            ${getErrors(errors, 'title')}
+            <input name="price" value="${product.price}"/>
+            ${getErrors(errors, 'price')}
+            <input name="image" type="file" />
+
+            <button>Submit</button>
+        </form>    
+
+        
+    `,
+  })
+}

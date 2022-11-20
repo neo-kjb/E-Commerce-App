@@ -51,7 +51,7 @@ module.exports = class Repository {
 
   async update(id, attrs) {
     const records = await this.getAll()
-    const record = records.find(record.id === id)
+    const record = records.find((record) => record.id === id)
 
     if (!record) {
       throw new Error(`there is no record with an id of ${id}`)
