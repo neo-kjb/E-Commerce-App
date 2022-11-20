@@ -28,7 +28,7 @@ router.post(
     const user = await usersRepo.create({ email, password })
     req.session.userId = user.id
 
-    res.send('Account created')
+    res.redirect('/admin/products')
   },
 )
 
@@ -51,7 +51,7 @@ router.post(
 
     req.session.userId = user.id
 
-    res.send('logged in')
+    res.redirect('/admin/products')
   },
 )
 
