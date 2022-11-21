@@ -56,8 +56,7 @@ router.post(
   }),
   async (req, res) => {
     const changes = req.body
-    console.log(changes)
-    console.log(req.params.id)
+
     if (req.file) {
       changes.image = req.file.buffer.toString('base64')
     }
@@ -70,5 +69,11 @@ router.post(
     res.redirect('/admin/products')
   },
 )
+
+router.post('/admin/products/:id/delete', requireAuth, async (req, res) => {
+  await productsRepo.delete(req.params.id)
+
+  res.redirect('/admin/products')
+})
 
 module.exports = router
