@@ -6,9 +6,17 @@ body {
   --black: #201a23;
 }
 
+.trim {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
 .product-card figure {
   text-align: center;
   padding: 5px;
+  min-height:436px;
 }
 
 .navbar ul.social {
