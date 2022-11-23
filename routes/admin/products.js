@@ -2,7 +2,7 @@ const express = require('express')
 const multer = require('multer')
 
 const { handleErrors, requireAuth } = require('./middlewares')
-const productsRepo = require('../../Repositories/products')
+const productsRepo = require('../../repositories/products')
 const productsNewTemplate = require('../../views/admin/products/new')
 const productsIndexTemplate = require('../../views/admin/products/index')
 const productsEditTemplate = require('../../views/admin/products/edit')

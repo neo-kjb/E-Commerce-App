@@ -1,5 +1,5 @@
 const express = require('express')
-const productsRepo = require('../Repositories/products')
+const productsRepo = require('../repositories/products')
 const productsIndexTemplate = require('../views/Products/index')
 
 const router = express.Router()
